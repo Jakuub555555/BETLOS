@@ -1,25 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Přihlášení přes Facebook</title>
+    <title>Registrace a Přihlášení</title>
 </head>
 <body>
-    <h1>Vítejte na mém webu!</h1>
-    <p>Klikněte na tlačítko níže pro přihlášení přes Facebook:</p>
+    <h2>Registrace</h2>
+    <form id="register-form">
+        <input type="email" id="email" placeholder="E-mail" required><br>
+        <input type="password" id="password" placeholder="Heslo" required><br>
+        <button type="button" onclick="register()">Registrovat</button>
+    </form>
 
-    <!-- Tlačítko pro přihlášení -->
-    <a href="#" id="fb-login-button" style="text-decoration: none; background: #4267B2; color: white; padding: 10px 20px; border-radius: 5px; display: inline-block; font-family: Arial, sans-serif;">
-        Přihlásit se přes Facebook
-    </a>
+    <h2>Přihlášení</h2>
+    <form id="login-form">
+        <input type="email" id="email" placeholder="E-mail" required><br>
+        <input type="password" id="password" placeholder="Heslo" required><br>
+        <button type="button" onclick="login()">Přihlásit se</button>
+    </form>
 
+    <h3 id="status"></h3>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-database.js"></script>
     <script>
-        // Tady by byla integrace s Facebook SDK
-        // Například volání funkce FB.login() při kliknutí na tlačítko
-        document.getElementById('fb-login-button').addEventListener('click', function() {
-            alert("Tady byste integrovali Facebook přihlášení.");
-        });
+        // Firebase Config (zde vložte svůj Firebase konfigurace)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtg9HuYdcYC52kdXRR2G_YIgKuKO1CptI",
+            authDomain: "betlos.firebaseapp.com",
+            projectId: "betlos",
+            storageBucket: "betlos.appspot.com",
+            messagingSenderId: "536613560210",
+            appId: "1:536613560210:web:4a4f25db4ba1bc4d09eb4b",
+            measurementId: "G-ZQ36V44FJW"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Registrace
+        function register() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log("Registrace úspěšná:", user);
+                    alert("Registrace úspěšná!");
+                    document.getElementById("status").innerText = "Registrace úspěšná!";
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error("Chyba při registraci:", errorCode, errorMessage);
+                    alert("Chyba při registraci: " + errorMessage);
+                    document.getElementById("status").innerText = "Chyba při registraci: " + errorMessage;
+                });
+        }
+
+        // Přihlášení
+        function login() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log("Přihlášení úspěšné:", user);
+                    alert("Přihlášení úspěšné!");
+                    document.getElementById("status").innerText = "Přihlášení úspěšné!";
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error("Chyba při přihlášení:", errorCode, errorMessage);
+                    alert("Chyba při přihlášení: " + errorMessage);
+                    document.getElementById("status").innerText = "Chyba při přihlášení: " + errorMessage;
+                });
+        }
     </script>
 </body>
 </html>
